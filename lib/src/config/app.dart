@@ -28,15 +28,17 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: routeNames.first,
           builder: (context, state) {
-            return Center(child: DetailsScreen());
+            return Center(child: FormScreen());
           },
         ),
         GoRoute(
           path: '/perfume',
           builder: (BuildContext context, GoRouterState state) {
             return Center(
-                child: Image.network(
-                    'https://fimgs.net/mdimg/perfume/375x500.53675.jpg'));
+              child: Image.network(
+                'https://fimgs.net/mdimg/perfume/375x500.53675.jpg',
+              ),
+            );
           },
         ),
         GoRoute(

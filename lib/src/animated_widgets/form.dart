@@ -2,30 +2,30 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class DetailsScreen extends StatelessWidget {
-  const DetailsScreen({super.key});
+class FormScreen extends StatelessWidget {
+  const FormScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: MyForm(),
+        child: PerfumeForm(),
       ),
     );
   }
 }
 
-class MyForm extends StatefulWidget {
-  const MyForm({super.key});
+class PerfumeForm extends StatefulWidget {
+  const PerfumeForm({super.key});
 
   @override
-  State<MyForm> createState() => _MyFormState();
+  State<PerfumeForm> createState() => _PerfumeFormState();
 }
 
-class _MyFormState extends State<MyForm> {
-  final List<Map<String, List<String>>> _questions = [
+class _PerfumeFormState extends State<PerfumeForm> {
+  static const List<Map<String, List<String>>> _questions = [
     {
-      'What are your perfume favorite notes': [
+      'What are your favorite notes': [
         'Woody',
         'Floral',
         'Citrus',
@@ -33,7 +33,7 @@ class _MyFormState extends State<MyForm> {
       ],
     },
     {
-      'What perfume longevity are you interested in?': [
+      'What perfume longevity do you prefer?': [
         'Weak',
         'Moderate',
         'Long lasting',
@@ -59,21 +59,39 @@ class _MyFormState extends State<MyForm> {
       'What perfume category are you looking for?': [
         'Catalog',
         'Commercial',
-        'Nicho',
+        'Niche',
       ]
     },
   ];
 
+  final _responses = <double>[];
+
   double _formProgress = 0.0;
   int _questionIndex = 0;
 
-  void _updateFormProgress() {
-    _formProgress += 1 / _questions.length;
+  bool _canContinue() {
+    return _responses.length - 1 == _questionIndex &&
+        _questionIndex < _questions.length - 1;
+  }
+
+  void _continue() {
+    _questionIndex += 1;
     setState(() {});
   }
 
-  void _showWelcomeScreen() {
+  void _showPerfumeScreen() {
     context.go('/perfume');
+  }
+
+  void _updateFormProgress() {
+    _responses.add(_formProgress);
+
+    if (_responses.length - 1 == _questionIndex) {
+      _formProgress += 1 / _questions.length;
+    } else if (_responses.length > _questionIndex) {
+      _responses.removeLast();
+    }
+    setState(() {});
   }
 
   @override
@@ -106,13 +124,11 @@ class _MyFormState extends State<MyForm> {
                     : Colors.black54;
               }),
             ),
-            onPressed:
-                _formProgress != 1 && _questionIndex < _questions.length - 1
-                    ? () {
-                        _questionIndex += 1;
-                        setState(() {});
-                      }
-                    : _showWelcomeScreen,
+            onPressed: _canContinue()
+                ? _continue
+                : _responses.length == 5
+                    ? _showPerfumeScreen
+                    : null,
             child: _formProgress != 1 && _questionIndex < _questions.length - 1
                 ? const Text('Continue')
                 : Text('Finish!'),
@@ -242,6 +258,7 @@ class _FormQuestionState extends State<FormQuestion> {
                 fontWeight: FontWeight.bold,
               ),
         ),
+        SizedBox(height: 20.0),
         for (var bIndex = 0; bIndex < widget.options.length; bIndex++)
           Padding(
             padding: const EdgeInsets.all(8),
