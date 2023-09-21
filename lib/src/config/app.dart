@@ -44,7 +44,7 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: '/a',
           builder: (BuildContext context, GoRouterState state) {
-            return Center(child: const Text('Child Route "/b"'));
+            return Center(child: const ListOfElements());
           },
         ),
       ],
