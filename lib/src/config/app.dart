@@ -48,7 +48,7 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: '/dash',
           builder: (BuildContext context, GoRouterState state) {
-            return Wave(size: MediaQuery.sizeOf(context));
+            return RecipesList();
           },
         ),
       ],
