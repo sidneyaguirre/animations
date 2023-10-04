@@ -83,7 +83,7 @@ class _PerfumeFormState extends State<PerfumeForm> {
     var question = _questions.elementAt(_questionIndex);
 
     return Scaffold(
-      backgroundColor: Colors.deepPurple.shade50,
+      backgroundColor: Colors.white,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(15.0),

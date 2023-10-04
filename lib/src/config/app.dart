@@ -6,7 +6,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-final routeNames = ['/', '/list', '/dash'];
+final routeNames = ['/', '/dash'];
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -39,16 +39,38 @@ final GoRouter _router = GoRouter(
             );
           },
         ),
-        GoRoute(
-          path: '/list',
-          builder: (BuildContext context, GoRouterState state) {
-            return Center(child: const ListOfElements());
-          },
-        ),
-        GoRoute(
+        /*GoRoute(
           path: '/dash',
           builder: (BuildContext context, GoRouterState state) {
-            return RecipesList();
+            return WavePage();
+          },
+        ),*/
+        GoRoute(
+          path: '/dash',
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            return CustomTransitionPage(
+              child: WavePage(),
+              transitionsBuilder: (
+                BuildContext context,
+                Animation<double> animation,
+                _,
+                Widget child,
+              ) {
+                var tween = Tween(
+                  begin: Offset(1.0, 0.0),
+                  end: Offset.zero,
+                ).chain(
+                  CurveTween(
+                    curve: Curves.ease,
+                  ),
+                );
+
+                return SlideTransition(
+                  position: animation.drive(tween),
+                  child: child,
+                );
+              },
+            );
           },
         ),
       ],

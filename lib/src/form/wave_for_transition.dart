@@ -3,14 +3,18 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class RecipesList extends StatelessWidget {
-  const RecipesList({super.key});
+class WavePage extends StatelessWidget {
+  const WavePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Wave(size: MediaQuery.sizeOf(context)),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Wave(
+            size: MediaQuery.sizeOf(context),
+          );
+        },
       ),
     );
   }
@@ -62,7 +66,7 @@ class _WaveState extends State<Wave> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder: (context, object, child) {
+      builder: (context, _, child) {
         _animationController.forward();
         _animationController.repeat();
         return child!;
@@ -74,7 +78,9 @@ class _WaveState extends State<Wave> with SingleTickerProviderStateMixin {
             angle: -pi / 2,
             child: ClipPath(
               clipper: WaveClipper(_animationController.value, _points),
-              child: MyContainer(),
+              child: Container(
+                color: Colors.purple,
+              ),
             ),
           );
         },
@@ -106,26 +112,14 @@ class WaveClipper extends CustomClipper<Path> {
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) => true;
 
   void _makeCurve(Size size) {
-    final amplitude = size.height / 3;
+    final amplitude = size.height / 15;
     final yOffset = amplitude;
 
     for (var x = 0; x < size.width; x++) {
-      var y = amplitude * sin(x / 75 + value) + yOffset;
+      var y = (amplitude) * sin(x / 120 + value) + yOffset;
 
       var newPoint = Offset(x.toDouble(), y);
       wavePoints[x] = newPoint;
     }
-  }
-}
-
-class MyContainer extends StatelessWidget {
-  const MyContainer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      color: Colors.purple,
-    );
   }
 }

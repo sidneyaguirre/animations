@@ -12,6 +12,5 @@ class Destination {
 
 const List<Destination> destinations = <Destination>[
   Destination(Icons.dynamic_form_rounded, 'Form'),
-  Destination(Icons.article_outlined, 'List'),
   Destination(Icons.flutter_dash, 'Dash'),
 ];
