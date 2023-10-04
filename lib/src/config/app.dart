@@ -6,7 +6,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-final routeNames = ['/', '/a', '/perfume'];
+final routeNames = ['/', '/list', '/dash'];
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -28,23 +28,27 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: routeNames.first,
           builder: (context, state) {
-            return Center(child: FormScreen());
+            return Center(child: PerfumeForm());
           },
         ),
         GoRoute(
           path: '/perfume',
           builder: (BuildContext context, GoRouterState state) {
             return Center(
-              child: Image.network(
-                'https://fimgs.net/mdimg/perfume/375x500.53675.jpg',
-              ),
+              child: PerfumeSelection(),
             );
           },
         ),
         GoRoute(
-          path: '/a',
+          path: '/list',
           builder: (BuildContext context, GoRouterState state) {
             return Center(child: const ListOfElements());
+          },
+        ),
+        GoRoute(
+          path: '/dash',
+          builder: (BuildContext context, GoRouterState state) {
+            return Wave(size: MediaQuery.sizeOf(context));
           },
         ),
       ],
