@@ -32,42 +32,47 @@ final GoRouter _router = GoRouter(
           },
         ),
         GoRoute(
-          path: '/perfume',
-          builder: (BuildContext context, GoRouterState state) {
-            return Center(
-              child: PerfumeSelection(),
-            );
-          },
-        ),
-        /*GoRoute(
           path: '/dash',
           builder: (BuildContext context, GoRouterState state) {
             return WavePage();
           },
-        ),*/
+        ),
         GoRoute(
-          path: '/dash',
+          path: '/perfume',
           pageBuilder: (BuildContext context, GoRouterState state) {
             return CustomTransitionPage(
-              child: WavePage(),
-              transitionsBuilder: (
-                BuildContext context,
-                Animation<double> animation,
-                _,
-                Widget child,
-              ) {
-                var tween = Tween(
-                  begin: Offset(1.0, 0.0),
-                  end: Offset.zero,
-                ).chain(
-                  CurveTween(
-                    curve: Curves.ease,
-                  ),
-                );
-
-                return SlideTransition(
-                  position: animation.drive(tween),
-                  child: child,
+              child: PerfumePageContent(),
+              opaque: false,
+              transitionsBuilder: (context, animation, _, child) {
+                return Scaffold(
+                  backgroundColor: Colors.transparent,
+                  body: LayoutBuilder(builder: (context, constraints) {
+                    // Adapted from : https://github.com/retroportalstudio/flutter_page_wave_transition
+                    return TweenAnimationBuilder(
+                      tween: Tween<double>(begin: 0.0, end: 1.0),
+                      duration: Duration(milliseconds: 1200),
+                      builder: (context, value, child) {
+                        return ShaderMask(
+                          blendMode: BlendMode.modulate,
+                          shaderCallback: (rect) {
+                            return RadialGradient(
+                              radius: value * 5,
+                              colors: [
+                                Colors.white,
+                                Colors.white,
+                                Colors.transparent,
+                                Colors.transparent,
+                              ],
+                              stops: [0.0, 0.5, 0.5, 1.0],
+                              center: FractionalOffset.bottomCenter,
+                            ).createShader(rect);
+                          },
+                          child: child,
+                        );
+                      },
+                      child: child,
+                    );
+                  }),
                 );
               },
             );

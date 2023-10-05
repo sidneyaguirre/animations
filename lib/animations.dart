@@ -3,8 +3,8 @@ export 'src/config/destinations.dart';
 export 'src/config/home.dart';
 export 'src/config/theme.dart';
 
-export 'src/form/form.dart';
-export 'src/form/perfume.dart';
+export 'src/form/animated_form_bar.dart';
+export 'src/form/form_results_content.dart';
 export 'src/form/wave_for_transition.dart';
 
 export 'src/nav_bars/bottom_bar_transitions.dart';

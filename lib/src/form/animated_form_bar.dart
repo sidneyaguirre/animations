@@ -35,13 +35,6 @@ class _PerfumeFormState extends State<PerfumeForm> {
       ]
     },
     {
-      'What gender perfume are you looking for?': [
-        '🌔 Female',
-        '🌗 Unisex',
-        '🌖 Male',
-      ]
-    },
-    {
       'What perfume category are you looking for?': [
         '🗂 Catalog',
         '🛍️ Commercial',
@@ -247,7 +240,11 @@ class _AnimatedProgressIndicatorState extends State<AnimatedProgressIndicator>
         weight: 1,
       ),
       TweenSequenceItem(
-        tween: ColorTween(begin: Colors.red, end: Colors.yellow),
+        tween: ColorTween(begin: Colors.red, end: Colors.orange),
+        weight: 1,
+      ),
+      TweenSequenceItem(
+        tween: ColorTween(begin: Colors.orange, end: Colors.yellow),
         weight: 1,
       ),
       TweenSequenceItem(
@@ -268,6 +265,8 @@ class _AnimatedProgressIndicatorState extends State<AnimatedProgressIndicator>
 
   @override
   Widget build(BuildContext context) {
+    print(_colorAnimation.value);
+
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) => Padding(
