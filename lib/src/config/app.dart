@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 final routeNames = ['/', '/dash'];
+final navBarWidth = 255;
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -50,7 +51,7 @@ final GoRouter _router = GoRouter(
                     // Adapted from : https://github.com/retroportalstudio/flutter_page_wave_transition
                     return TweenAnimationBuilder(
                       tween: Tween<double>(begin: 0.0, end: 1.0),
-                      duration: Duration(milliseconds: 1200),
+                      duration: Duration(milliseconds: 1000),
                       builder: (context, value, child) {
                         return ShaderMask(
                           blendMode: BlendMode.modulate,
@@ -63,8 +64,8 @@ final GoRouter _router = GoRouter(
                                 Colors.transparent,
                                 Colors.transparent,
                               ],
-                              stops: [0.0, 0.5, 0.5, 1.0],
-                              center: FractionalOffset.bottomCenter,
+                              stops: [0.0, 0.45, 0.55, 1.0],
+                              center: FractionalOffset.bottomRight,
                             ).createShader(rect);
                           },
                           child: child,

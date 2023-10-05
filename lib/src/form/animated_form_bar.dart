@@ -164,16 +164,19 @@ class _FormQuestionState extends State<FormQuestion> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 border: selected
-                    ? Border.all(color: Colors.deepPurple.shade300, width: 2)
+                    ? Border.all(color: Colors.deepPurple.shade900, width: 2)
                     : null,
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
-                color: selected ? Colors.deepPurple.shade100 : Colors.white,
+                color: selected
+                    ? Colors.deepPurple.shade400
+                    : Colors.deepPurple.shade100,
               ),
               height: 50,
               width: 300,
               child: Text(
                 widget.options.elementAt(bIndex),
                 style: TextStyle(
+                  color: selected ? Colors.white : Colors.black87,
                   fontWeight: selected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
@@ -265,8 +268,6 @@ class _AnimatedProgressIndicatorState extends State<AnimatedProgressIndicator>
 
   @override
   Widget build(BuildContext context) {
-    print(_colorAnimation.value);
-
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) => Padding(

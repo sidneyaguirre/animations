@@ -8,7 +8,7 @@ class PerfumePageContent extends StatefulWidget {
 }
 
 class _PerfumePageContentState extends State<PerfumePageContent> {
-  double _size = 600.0;
+  double _size = 400.0;
   bool _large = true;
 
   @override
@@ -27,7 +27,7 @@ class _PerfumePageContentState extends State<PerfumePageContent> {
               duration: const Duration(seconds: 1),
               height: _size,
               width: _size,
-              child: Image.asset('img.png'),
+              child: Image.asset('assets/img.png'),
             ),
           ),
           Padding(
@@ -37,9 +37,8 @@ class _PerfumePageContentState extends State<PerfumePageContent> {
               transitionBuilder: (Widget child, Animation<double> animation) {
                 return FadeTransition(opacity: animation, child: child);
               },
-              child: RichText(
-                key: Key(_size.toString()),
-                text: TextSpan(
+              child: Text.rich(
+                TextSpan(
                     text: 'You will enjoy ',
                     style: TextStyle(
                       fontSize: 25.0,
@@ -59,6 +58,8 @@ class _PerfumePageContentState extends State<PerfumePageContent> {
                             fontWeight: FontWeight.normal,
                           )),
                     ]),
+                key: Key(_size.toString()),
+                textAlign: TextAlign.center,
               ),
             ),
           ),
@@ -70,7 +71,7 @@ class _PerfumePageContentState extends State<PerfumePageContent> {
               child: ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    _size = _large ? 300 : 600;
+                    _size = _large ? 200 : 400;
                     _large = !_large;
                   });
                 },
