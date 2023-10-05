@@ -27,7 +27,7 @@ class _PerfumePageContentState extends State<PerfumePageContent> {
               duration: const Duration(seconds: 1),
               height: _size,
               width: _size,
-              child: Image.asset('assets/img.png'),
+              child: Image.asset('assets/perfume.png'),
             ),
           ),
           Padding(

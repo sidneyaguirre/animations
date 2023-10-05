@@ -93,8 +93,7 @@ class _PerfumeFormState extends State<PerfumeForm> {
                   question: question.keys.first,
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
+              Flexible(
                 child: Container(
                   height: 60,
                   width: 130,

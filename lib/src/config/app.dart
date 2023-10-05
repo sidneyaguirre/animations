@@ -6,7 +6,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-final routeNames = ['/', '/dash'];
+final routeNames = ['/', '/dash', '/loading'];
 final navBarWidth = 255;
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -39,6 +39,12 @@ final GoRouter _router = GoRouter(
           },
         ),
         GoRoute(
+          path: '/loading',
+          builder: (BuildContext context, GoRouterState state) {
+            return LoadingPage();
+          },
+        ),
+        GoRoute(
           path: '/perfume',
           pageBuilder: (BuildContext context, GoRouterState state) {
             return CustomTransitionPage(
@@ -50,8 +56,9 @@ final GoRouter _router = GoRouter(
                   body: LayoutBuilder(builder: (context, constraints) {
                     // Adapted from : https://github.com/retroportalstudio/flutter_page_wave_transition
                     return TweenAnimationBuilder(
-                      tween: Tween<double>(begin: 0.0, end: 1.0),
+                      curve: Curves.easeOut,
                       duration: Duration(milliseconds: 1000),
+                      tween: Tween<double>(begin: 0.0, end: 1.0),
                       builder: (context, value, child) {
                         return ShaderMask(
                           blendMode: BlendMode.modulate,
@@ -64,7 +71,7 @@ final GoRouter _router = GoRouter(
                                 Colors.transparent,
                                 Colors.transparent,
                               ],
-                              stops: [0.0, 0.45, 0.55, 1.0],
+                              stops: [0.0, 0.5, 0.6, 1.0],
                               center: FractionalOffset.bottomRight,
                             ).createShader(rect);
                           },
