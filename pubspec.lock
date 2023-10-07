@@ -96,6 +96,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.18.1"
+  json_class:
+    dependency: "direct main"
+    description:
+      name: json_class
+      sha256: "969408b2cc2af666c51fa3dca1bbee79ad6361fb7da801156d248f80d9f46c77"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0+5"
   lints:
     dependency: transitive
     description:

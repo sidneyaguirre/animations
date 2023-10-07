@@ -41,7 +41,7 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: '/loading',
           builder: (BuildContext context, GoRouterState state) {
-            return LoadingPage();
+            return RecipeListPage();
           },
         ),
         GoRoute(
@@ -57,7 +57,7 @@ final GoRouter _router = GoRouter(
                     // Adapted from : https://github.com/retroportalstudio/flutter_page_wave_transition
                     return TweenAnimationBuilder(
                       curve: Curves.easeOut,
-                      duration: Duration(milliseconds: 1000),
+                      duration: Duration(milliseconds: 1200),
                       tween: Tween<double>(begin: 0.0, end: 1.0),
                       builder: (context, value, child) {
                         return ShaderMask(
