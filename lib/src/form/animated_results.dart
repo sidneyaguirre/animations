@@ -41,20 +41,20 @@ class _PerfumePageContentState extends State<PerfumePageContent> {
                 TextSpan(
                   text: 'You will enjoy ',
                   style: TextStyle(
-                    fontSize: 25.0,
+                    fontSize: 20.0,
                     fontWeight: FontWeight.normal,
                   ),
                   children: [
                     TextSpan(
                         text: _large ? '100 ml' : '50 ml',
                         style: TextStyle(
-                          fontSize: 30.0,
+                          fontSize: 25.0,
                           fontWeight: FontWeight.bold,
                         )),
                     TextSpan(
                         text: ' of this perfume',
                         style: TextStyle(
-                          fontSize: 25.0,
+                          fontSize: 20.0,
                           fontWeight: FontWeight.normal,
                         )),
                   ],

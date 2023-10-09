@@ -11,7 +11,7 @@ class PerfumeForm extends StatefulWidget {
 class _PerfumeFormState extends State<PerfumeForm> {
   static const List<Map<String, List<String>>> _questions = [
     {
-      'What are your favorite perfume notes?': [
+      'What are your favorite notes?': [
         '🪵 Woody',
         '🪷 Floral',
         '🍋 Citrus',
@@ -19,7 +19,7 @@ class _PerfumeFormState extends State<PerfumeForm> {
       ],
     },
     {
-      'What perfume longevity do you prefer?': [
+      'What longevity do you prefer?': [
         '☁️ Weak',
         '🌥 Moderate',
         '⛅️ Long lasting',
@@ -27,7 +27,7 @@ class _PerfumeFormState extends State<PerfumeForm> {
       ]
     },
     {
-      'What perfume sillage do you prefer?': [
+      'What sillage do you prefer?': [
         '🔇 Intimate',
         '🔈 Moderate',
         '🔉 Strong',
@@ -35,7 +35,7 @@ class _PerfumeFormState extends State<PerfumeForm> {
       ]
     },
     {
-      'What perfume category are you looking for?': [
+      'What category are you looking for?': [
         '🗂 Catalog',
         '🛍️ Commercial',
         '🧧 Niche',
@@ -84,18 +84,17 @@ class _PerfumeFormState extends State<PerfumeForm> {
             mainAxisSize: MainAxisSize.max,
             children: [
               AnimatedProgressIndicator(progress: _formProgress),
-              Expanded(
-                child: FormQuestion(
-                  onSelectedOption: (String value) {
-                    _onSelectResponse.call(value);
-                  },
-                  options: question.values.first,
-                  question: question.keys.first,
-                ),
+              FormQuestion(
+                onSelectedOption: (String value) {
+                  _onSelectResponse.call(value);
+                },
+                options: question.values.first,
+                question: question.keys.first,
               ),
               Flexible(
                 child: Container(
                   height: 60,
+                  padding: const EdgeInsets.only(top: 12),
                   width: 130,
                   child: ElevatedButton(
                     onPressed: _response != null &&

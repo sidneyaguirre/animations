@@ -6,7 +6,9 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-final routeNames = ['/', '/dash', '/loading'];
+import '../widgets/recipe/model/recipe.dart';
+
+final routeNames = ['/', '/dash', '/recipes'];
 final navBarWidth = 255;
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -39,9 +41,18 @@ final GoRouter _router = GoRouter(
           },
         ),
         GoRoute(
-          path: '/loading',
+          path: '/recipes',
           builder: (BuildContext context, GoRouterState state) {
             return RecipeListPage();
+          },
+        ),
+        GoRoute(
+          path: '/recipe-details/:id',
+          builder: (BuildContext context, GoRouterState state) {
+            return RecipeDetailsPage(
+              id: state.pathParameters['id']!,
+              recipe: state.extra as Recipe,
+            );
           },
         ),
         GoRoute(

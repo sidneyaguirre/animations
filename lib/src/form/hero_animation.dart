@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:animations/src/form/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
@@ -35,7 +36,7 @@ class _RecipeListPageState extends State<RecipeListPage>
       ..forward()
       ..repeat();
 
-    _getRecipes('a');
+    _getRecipes();
   }
 
   @override
@@ -45,23 +46,31 @@ class _RecipeListPageState extends State<RecipeListPage>
     super.dispose();
   }
 
-  void _getRecipes(String initial) async {
-    var recipes = await _recipeActions.getRecipesByInitial(initial);
-    _recipes.addAll(recipes!);
+  void _getRecipes() async {
+    var alphabet = List.generate(
+        26, (index) => String.fromCharCode(index + 65).toLowerCase());
+
+    for (var letter in alphabet) {
+      var recipes = await _recipeActions.getRecipesByInitial(letter);
+      _recipes.addAll(recipes ?? []);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: MySearchBar(),
+      ),
       body: Center(
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            return Hero(
-                tag: _recipes[index].id!,
-                child: RecipeItem(recipe: _recipes[index]));
-          },
-          itemCount: _recipes.length,
-        ),
+        child: _recipes.isNotEmpty
+            ? ListView.builder(
+                itemBuilder: (context, index) {
+                  return RecipeItem(recipe: _recipes[index]);
+                },
+                itemCount: _recipes.length,
+              )
+            : CircularProgressIndicator(),
       ),
     );
   }
@@ -78,53 +87,58 @@ class RecipeItem extends StatelessWidget {
     const titleSize = 16.0;
     const bodySize = 13.0;
 
-    return Card(
-      elevation: 5,
-      margin: const EdgeInsets.all(8),
-      child: Row(
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                context.go(
-                  '/recipe-details?${recipe.id}',
-                  extra: recipe,
-                );
-              },
-              child: Image.network(
-                recipe.thumbnail!,
-                fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        context.push(
+          '/recipe-details/${recipe.id}',
+          extra: recipe,
+        );
+      },
+      child: Card(
+        elevation: 5,
+        margin: const EdgeInsets.all(8),
+        child: Row(
+          children: [
+            Flexible(
+              child: Hero(
+                tag: recipe.id!,
+                child: CircleAvatar(
+                  radius: 48,
+                  backgroundImage: NetworkImage(
+                    recipe.thumbnail!,
+                  ),
+                ),
               ),
             ),
-          ),
-          SizedBox(width: padding),
-          Expanded(
-            flex: 3,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    recipe.name!,
-                    style: TextStyle(
-                      fontSize: titleSize,
-                      fontWeight: FontWeight.bold,
+            SizedBox(width: padding),
+            Expanded(
+              flex: 3,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      recipe.name!,
+                      style: TextStyle(
+                        fontSize: titleSize,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: padding),
-                  Text(
-                    recipe.tags ?? '',
-                    style: TextStyle(
-                      fontSize: bodySize,
-                      fontWeight: FontWeight.w700,
+                    SizedBox(height: padding),
+                    Text(
+                      recipe.tags ?? '',
+                      style: TextStyle(
+                        fontSize: bodySize,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -161,7 +175,14 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Icon(Icons.arrow_back_rounded),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,38 +194,44 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                 fit: BoxFit.cover,
               ),
             ),
-            Text(
-              _recipe.name!,
-              style: TextStyle(
-                fontSize: _titleSize,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: _padding),
-            Text(
-              _recipe.instructions ?? '',
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: _bodySize,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-            SizedBox(height: _padding),
-            Text(
-              _recipe.tags ?? '',
-              style: TextStyle(
-                fontSize: _bodySize,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: _padding),
-            Text(
-              _recipe.youtubeLink ?? '',
-              style: TextStyle(
-                color: Colors.deepPurpleAccent,
-                fontSize: _bodySize,
-                fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _recipe.name!,
+                    style: TextStyle(
+                      fontSize: _titleSize,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: _padding),
+                  Text(
+                    _recipe.instructions ?? '',
+                    style: TextStyle(
+                      fontSize: _bodySize,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  SizedBox(height: _padding),
+                  Text(
+                    _recipe.tags ?? '',
+                    style: TextStyle(
+                      fontSize: _bodySize,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: _padding),
+                  Text(
+                    _recipe.youtubeLink ?? '',
+                    style: TextStyle(
+                      color: Colors.deepPurpleAccent,
+                      fontSize: _bodySize,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -225,7 +252,7 @@ class RecipeActions {
 
     if (apiResponse.statusCode == 200) {
       var json = jsonDecode(apiResponse.body) as Map<String, dynamic>;
-      result = Recipe.fromDynamic(json['meals']);
+      result = Recipe.fromDynamic(json['meals'] ?? []);
     } else {
       throw Exception('Failed to load recipes');
     }
