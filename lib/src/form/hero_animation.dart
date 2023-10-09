@@ -20,28 +20,15 @@ class _RecipeListPageState extends State<RecipeListPage>
   final RecipeActions _recipeActions = RecipeActions();
   final List<Recipe> _recipes = [];
 
-  late AnimationController _controller;
-
   @override
   void initState() {
     super.initState();
-
-    _controller = AnimationController(
-      value: 100,
-      duration: Duration(
-        seconds: 3,
-      ),
-      vsync: this,
-    )
-      ..forward()
-      ..repeat();
 
     _getRecipes();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     _client.close();
     super.dispose();
   }
@@ -60,8 +47,11 @@ class _RecipeListPageState extends State<RecipeListPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.deepPurple.shade50,
         title: MySearchBar(),
+        toolbarHeight: 80,
       ),
+      backgroundColor: Colors.deepPurple.shade50,
       body: Center(
         child: _recipes.isNotEmpty
             ? ListView.builder(
@@ -97,47 +87,51 @@ class RecipeItem extends StatelessWidget {
       child: Card(
         elevation: 5,
         margin: const EdgeInsets.all(8),
-        child: Row(
-          children: [
-            Flexible(
-              child: Hero(
-                tag: recipe.id!,
-                child: CircleAvatar(
-                  radius: 48,
-                  backgroundImage: NetworkImage(
-                    recipe.thumbnail!,
+        surfaceTintColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            children: [
+              Flexible(
+                child: Hero(
+                  tag: recipe.id!,
+                  child: CircleAvatar(
+                    radius: 48,
+                    backgroundImage: NetworkImage(
+                      recipe.thumbnail!,
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(width: padding),
-            Expanded(
-              flex: 3,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      recipe.name!,
-                      style: TextStyle(
-                        fontSize: titleSize,
-                        fontWeight: FontWeight.bold,
+              SizedBox(width: padding),
+              Expanded(
+                flex: 3,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        recipe.name!,
+                        style: TextStyle(
+                          fontSize: titleSize,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: padding),
-                    Text(
-                      recipe.tags ?? '',
-                      style: TextStyle(
-                        fontSize: bodySize,
-                        fontWeight: FontWeight.w700,
+                      SizedBox(height: padding),
+                      Text(
+                        recipe.tags ?? '',
+                        style: TextStyle(
+                          fontSize: bodySize,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -160,7 +154,7 @@ class RecipeDetailsPage extends StatefulWidget {
 
 class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
   static const _padding = 15.0;
-  static const _titleSize = 16.0;
+  static const _titleSize = 20.0;
   static const _bodySize = 13.0;
 
   late Recipe _recipe;
@@ -174,6 +168,8 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.sizeOf(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -182,44 +178,79 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
           },
           icon: Icon(Icons.arrow_back_rounded),
         ),
+        title: Text(
+          _recipe.name!,
+          style: TextStyle(
+            fontSize: _titleSize,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Hero(
-              tag: _recipe.id!,
-              child: Image.network(
-                _recipe.thumbnail!,
-                fit: BoxFit.cover,
-              ),
-            ),
+            size.width <= 610
+                ? Hero(
+                    tag: _recipe.id!,
+                    child: Image.network(
+                      _recipe.thumbnail!,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : Center(
+                    child: Hero(
+                      tag: _recipe.id!,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: SizedBox(
+                          width: 350,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20.0),
+                            child: Image.network(
+                              _recipe.thumbnail!,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
             Padding(
               padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(height: _padding),
                   Text(
-                    _recipe.name!,
+                    'Tags:',
                     style: TextStyle(
-                      fontSize: _titleSize,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: _padding),
-                  Text(
-                    _recipe.instructions ?? '',
-                    style: TextStyle(
-                      fontSize: _bodySize,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                  SizedBox(height: _padding),
+                  SizedBox(height: 8),
                   Text(
                     _recipe.tags ?? '',
                     style: TextStyle(
                       fontSize: _bodySize,
                       fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: _padding),
+                  Text(
+                    'Instructions:',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    _recipe.instructions ?? '',
+                    style: TextStyle(
+                      fontSize: _bodySize,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
                   SizedBox(height: _padding),

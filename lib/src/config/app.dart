@@ -18,18 +18,19 @@ final GlobalKey<NavigatorState> _shellNavigatorKey =
 
 final GoRouter _router = GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: routeNames.first,
+  initialLocation: '/',
   routes: [
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) {
         return Home(
+          route: state.uri,
           child: child,
         );
       },
       routes: [
         GoRoute(
-          path: routeNames.first,
+          path: '/',
           builder: (context, state) {
             return Center(child: PerfumeForm());
           },

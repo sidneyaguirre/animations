@@ -6,9 +6,11 @@ class Home extends StatefulWidget {
   const Home({
     super.key,
     this.child,
+    this.route,
   });
 
   final Widget? child;
+  final Uri? route;
 
   @override
   State<Home> createState() => _HomeState();
@@ -30,8 +32,22 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   late final _railFabAnimation = RailFabAnimation(parent: _controller);
   late final _barAnimation = BarAnimation(parent: _controller);
 
-  bool controllerInitialized = false;
-  int selectedIndex = 0;
+  bool _controllerInitialized = false;
+  late int _selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+
+    switch (widget.route.toString()) {
+      case '/':
+        _selectedIndex = 0;
+      case '/recipes':
+        _selectedIndex = 2;
+      default:
+        _selectedIndex = 0;
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -53,8 +69,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       }
     }
 
-    if (!controllerInitialized) {
-      controllerInitialized = true;
+    if (!_controllerInitialized) {
+      _controllerInitialized = true;
       _controller.value = width > 610 ? 1 : 0;
     }
   }
@@ -75,10 +91,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             children: [
               CustomNavigationRail(
                 backgroundColor: _backgroundColor,
-                selectedIndex: selectedIndex,
+                selectedIndex: _selectedIndex,
                 onDestinationSelected: (index) {
                   setState(() {
-                    selectedIndex = index;
+                    _selectedIndex = index;
                     context.go(routeNames.elementAt(index));
                   });
                 },
@@ -95,10 +111,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ),
           bottomNavigationBar: CustomBottomNavigationBar(
             barAnimation: _barAnimation,
-            selectedIndex: selectedIndex,
+            selectedIndex: _selectedIndex,
             onDestinationSelected: (index) {
               setState(() {
-                selectedIndex = index;
+                _selectedIndex = index;
                 context.go(routeNames.elementAt(index));
               });
             },
