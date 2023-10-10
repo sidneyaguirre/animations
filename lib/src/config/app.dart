@@ -37,8 +37,29 @@ final GoRouter _router = GoRouter(
         ),
         GoRoute(
           path: '/dash',
-          builder: (BuildContext context, GoRouterState state) {
-            return WavePage();
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            return CustomTransitionPage(
+              child: Container(
+                color: Colors.transparent,
+                child: Center(
+                  child: Text('HELLO'),
+                ),
+              ),
+              transitionsBuilder: (context, animation, _, child) {
+                return Scaffold(
+                  backgroundColor: Colors.transparent,
+                  body: LayoutBuilder(builder: (context, constraints) {
+                    return Wave(
+                      size: Size(
+                        constraints.maxWidth,
+                        constraints.maxHeight,
+                      ),
+                      child: child,
+                    );
+                  }),
+                );
+              },
+            );
           },
         ),
         GoRoute(

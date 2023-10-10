@@ -42,6 +42,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     switch (widget.route.toString()) {
       case '/':
         _selectedIndex = 0;
+      case '/dash':
+        _selectedIndex = 1;
       case '/recipes':
         _selectedIndex = 2;
       default:

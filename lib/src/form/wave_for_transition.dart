@@ -1,28 +1,12 @@
 import 'dart:math';
 
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-class WavePage extends StatelessWidget {
-  const WavePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Wave(
-            size: MediaQuery.sizeOf(context),
-          );
-        },
-      ),
-    );
-  }
-}
 
 class Wave extends StatefulWidget {
-  const Wave({super.key, required this.size});
+  const Wave({required this.child, super.key, required this.size});
 
+  final Widget child;
   final Size size;
 
   @override
@@ -33,15 +17,28 @@ class _WaveState extends State<Wave> with SingleTickerProviderStateMixin {
   late List<Offset> _points;
   late AnimationController _animationController;
 
+  late final Animation<Offset> _offsetAnimation;
+
   @override
   void initState() {
     super.initState();
 
     _animationController = AnimationController(
-      duration: const Duration(seconds: 3),
+      duration: const Duration(milliseconds: 800),
       vsync: this,
-      upperBound: 2 * pi,
-    );
+    )..forward();
+
+    _offsetAnimation = Tween<Offset>(
+      begin: Offset(0.0, 1.0),
+      end: const Offset(0.0, -1.0),
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.linear,
+      ),
+    )..addListener(() {
+        setState(() {});
+      });
 
     _initPoints();
   }
@@ -57,7 +54,7 @@ class _WaveState extends State<Wave> with SingleTickerProviderStateMixin {
     var r = Random();
     for (var i = 0; i < widget.size.width; i++) {
       var x = i.toDouble();
-      var y = r.nextDouble() * (widget.size.height * 0.8);
+      var y = r.nextDouble() * (widget.size.height);
 
       _points.add(Offset(x, y));
     }
@@ -65,25 +62,39 @@ class _WaveState extends State<Wave> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, _, child) {
-        _animationController.forward();
-        _animationController.repeat();
-        return child!;
-      },
-      child: AnimatedBuilder(
-        animation: _animationController,
-        builder: (context, child) {
-          return Transform.rotate(
-            angle: -pi / 2,
-            child: ClipPath(
+    return AnimatedCrossFade(
+      crossFadeState: _offsetAnimation.isCompleted
+          ? CrossFadeState.showSecond
+          : CrossFadeState.showFirst,
+      duration: const Duration(milliseconds: 200),
+      firstChild: SlideTransition(
+        position: _offsetAnimation,
+        child: AnimatedBuilder(
+          animation: _animationController,
+          builder: (context, child) {
+            return ClipPath(
               clipper: WaveClipper(_animationController.value, _points),
               child: Container(
-                color: Colors.purple,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    colors: [
+                      AppTheme.violetPastel,
+                      AppTheme.violetPastel,
+                      Colors.transparent,
+                    ],
+                    end: Alignment.bottomCenter,
+                    stops: [0.0, 0.65, 1.0],
+                  ),
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
+      ),
+      secondChild: Container(
+        color: Colors.transparent,
+        child: widget.child,
       ),
     );
   }
