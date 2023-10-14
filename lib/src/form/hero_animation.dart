@@ -157,7 +157,11 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
   static const _titleSize = 20.0;
   static const _bodySize = 13.0;
 
+  final ScrollController _scrollController = ScrollController();
+
   late Recipe _recipe;
+
+  bool _expandedIngredients = false;
 
   @override
   void initState() {
@@ -172,6 +176,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.purple.shade50,
         leading: IconButton(
           onPressed: () {
             context.pop();
@@ -187,6 +192,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
         ),
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -222,20 +228,67 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: _padding),
-                  Text(
-                    'Tags:',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  if (_recipe.tags != null)
+                    Text(
+                      'Tags:',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    _recipe.tags ?? '',
-                    style: TextStyle(
-                      fontSize: _bodySize,
-                      fontWeight: FontWeight.bold,
+                  if (_recipe.tags != null) SizedBox(height: 8),
+                  if (_recipe.tags != null)
+                    Text(
+                      _recipe.tags!,
+                      style: TextStyle(
+                        fontSize: _bodySize,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
+                  SizedBox(height: _padding),
+                  ExpansionTile(
+                    backgroundColor: Colors.purple.shade100,
+                    collapsedBackgroundColor: Colors.purple.shade100,
+                    collapsedShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(12.0),
+                      ),
+                    ),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(12.0),
+                      ),
+                    ),
+                    title: _expandedIngredients
+                        ? Text('Hide Ingredients')
+                        : Text('See Ingredients'),
+                    onExpansionChanged: (value) {
+                      _expandedIngredients = value;
+                      setState(() {});
+                      final offset =
+                          size.width <= 610 ? size.height * 0.5 : 0.0;
+
+                      _scrollController.animateTo(
+                        offset,
+                        curve: Curves.easeOut,
+                        duration: const Duration(milliseconds: 500),
+                      );
+                    },
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          _recipe.ingredients ?? '',
+                          style: TextStyle(
+                            fontSize: _bodySize,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: _padding),
                   Text(
@@ -262,6 +315,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  SizedBox(height: _padding),
                 ],
               ),
             ),

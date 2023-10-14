@@ -13,10 +13,9 @@ class Wave extends StatefulWidget {
   State<Wave> createState() => _WaveState();
 }
 
-class _WaveState extends State<Wave> with SingleTickerProviderStateMixin {
+class _WaveState extends State<Wave> with TickerProviderStateMixin {
   late List<Offset> _points;
   late AnimationController _animationController;
-
   late final Animation<Offset> _offsetAnimation;
 
   @override
@@ -66,30 +65,25 @@ class _WaveState extends State<Wave> with SingleTickerProviderStateMixin {
       crossFadeState: _offsetAnimation.isCompleted
           ? CrossFadeState.showSecond
           : CrossFadeState.showFirst,
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 100),
       firstChild: SlideTransition(
         position: _offsetAnimation,
-        child: AnimatedBuilder(
-          animation: _animationController,
-          builder: (context, child) {
-            return ClipPath(
-              clipper: WaveClipper(_animationController.value, _points),
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    colors: [
-                      AppTheme.violetPastel,
-                      AppTheme.violetPastel,
-                      Colors.transparent,
-                    ],
-                    end: Alignment.bottomCenter,
-                    stops: [0.0, 0.65, 1.0],
-                  ),
-                ),
+        child: ClipPath(
+          clipper: WaveClipper(_animationController.value, _points),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                colors: [
+                  AppTheme.violetPastel,
+                  AppTheme.violetPastel,
+                  Colors.transparent,
+                ],
+                end: Alignment.bottomCenter,
+                stops: [0.0, 0.65, 1.0],
               ),
-            );
-          },
+            ),
+          ),
         ),
       ),
       secondChild: Container(
@@ -127,7 +121,7 @@ class WaveClipper extends CustomClipper<Path> {
     final yOffset = amplitude;
 
     for (var x = 0; x < size.width; x++) {
-      var y = (amplitude) * sin(x / 120 + value) + yOffset;
+      var y = (amplitude) * sin(x / 100 - value) + yOffset;
 
       var newPoint = Offset(x.toDouble(), y);
       wavePoints[x] = newPoint;

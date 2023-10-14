@@ -14,14 +14,12 @@ class _PerfumePageContentState extends State<PerfumePageContent> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.all(20.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Flexible(
+          Expanded(
             flex: 3,
-            fit: FlexFit.tight,
             child: AnimatedContainer(
               curve: Curves.easeIn,
               duration: const Duration(seconds: 1),
@@ -64,19 +62,21 @@ class _PerfumePageContentState extends State<PerfumePageContent> {
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              height: 60,
-              width: 130,
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _size = _large ? 200 : 400;
-                    _large = !_large;
-                  });
-                },
-                child: const Text('Toggle Size'),
+          Expanded(
+            child: Align(
+              alignment: Alignment.center,
+              child: Container(
+                height: 60,
+                width: 130,
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _size = _large ? 200 : 400;
+                      _large = !_large;
+                    });
+                  },
+                  child: const Text('Toggle Size'),
+                ),
               ),
             ),
           ),

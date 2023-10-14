@@ -3,7 +3,7 @@ export 'src/config/destinations.dart';
 export 'src/config/home.dart';
 export 'src/config/theme.dart';
 
-export 'src/form/animated_form_bar.dart';
+export 'src/form/animated_progress_bar.dart';
 export 'src/form/animated_results.dart';
 export 'src/form/hero_animation.dart';
 export 'src/form/wave_for_transition.dart';

@@ -8,7 +8,11 @@ import 'package:go_router/go_router.dart';
 
 import '../widgets/recipe/model/recipe.dart';
 
-final routeNames = ['/', '/dash', '/recipes'];
+final routeNames = [
+  '/',
+  '/recipes',
+  '/dash',
+];
 final navBarWidth = 255;
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -82,36 +86,19 @@ final GoRouter _router = GoRouter(
           pageBuilder: (BuildContext context, GoRouterState state) {
             return CustomTransitionPage(
               child: PerfumePageContent(),
-              opaque: false,
               transitionsBuilder: (context, animation, _, child) {
                 return Scaffold(
                   backgroundColor: Colors.transparent,
                   body: LayoutBuilder(builder: (context, constraints) {
-                    // Adapted from : https://github.com/retroportalstudio/flutter_page_wave_transition
-                    return TweenAnimationBuilder(
-                      curve: Curves.easeOut,
-                      duration: Duration(milliseconds: 1200),
-                      tween: Tween<double>(begin: 0.0, end: 1.0),
-                      builder: (context, value, child) {
-                        return ShaderMask(
-                          blendMode: BlendMode.modulate,
-                          shaderCallback: (rect) {
-                            return RadialGradient(
-                              radius: value * 5,
-                              colors: [
-                                Colors.white,
-                                Colors.white,
-                                Colors.transparent,
-                                Colors.transparent,
-                              ],
-                              stops: [0.0, 0.5, 0.6, 1.0],
-                              center: FractionalOffset.bottomRight,
-                            ).createShader(rect);
-                          },
-                          child: child,
-                        );
-                      },
-                      child: child,
+                    return Wave(
+                      size: Size(
+                        constraints.maxWidth,
+                        constraints.maxHeight,
+                      ),
+                      child: ConstrainedBox(
+                        constraints: constraints,
+                        child: child,
+                      ),
                     );
                   }),
                 );
