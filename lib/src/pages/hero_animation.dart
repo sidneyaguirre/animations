@@ -1,11 +1,10 @@
 import 'dart:convert';
 
-import 'package:animations/src/form/search_bar.dart';
+import 'package:animations/src/pages/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
-
-import '../widgets/recipe/model/recipe.dart';
+import 'package:json_class/json_class.dart';
 
 class RecipeListPage extends StatefulWidget {
   const RecipeListPage({super.key});
@@ -35,11 +34,17 @@ class _RecipeListPageState extends State<RecipeListPage>
 
   void _getRecipes() async {
     var alphabet = List.generate(
-        26, (index) => String.fromCharCode(index + 65).toLowerCase());
+      3, // From A to C
+      (index) => String.fromCharCode(index + 65).toLowerCase(),
+    );
 
     for (var letter in alphabet) {
       var recipes = await _recipeActions.getRecipesByInitial(letter);
       _recipes.addAll(recipes ?? []);
+    }
+
+    if (mounted) {
+      setState(() {});
     }
   }
 
@@ -120,7 +125,7 @@ class RecipeItem extends StatelessWidget {
                       ),
                       SizedBox(height: padding),
                       Text(
-                        recipe.tags ?? '',
+                        recipe.category ?? '',
                         style: TextStyle(
                           fontSize: bodySize,
                           fontWeight: FontWeight.w700,
@@ -261,9 +266,15 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                         Radius.circular(12.0),
                       ),
                     ),
-                    title: _expandedIngredients
-                        ? Text('Hide Ingredients')
-                        : Text('See Ingredients'),
+                    title: Text(
+                      _expandedIngredients
+                          ? 'Hide Ingredients'
+                          : 'See Ingredients',
+                      style: TextStyle(
+                        fontSize: _bodySize,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     onExpansionChanged: (value) {
                       _expandedIngredients = value;
                       setState(() {});
@@ -344,4 +355,58 @@ class RecipeActions {
 
     return result;
   }
+}
+
+class Recipe extends JsonClass {
+  Recipe({
+    this.area,
+    this.category,
+    this.id,
+    this.ingredients,
+    this.instructions,
+    this.name,
+    this.tags,
+    this.thumbnail,
+    this.youtubeLink,
+  });
+
+  factory Recipe.fromJson(Map<String, dynamic> json) => Recipe(
+        area: json['strArea'],
+        category: json['strCategory'],
+        id: json['idMeal'],
+        ingredients:
+            '${json['strIngredient1']}: ${json['strMeasure1']},\n${json['strIngredient2']}: ${json['strMeasure2']},\n${json['strIngredient3']}: ${json['strMeasure3']},\n${json['strIngredient4']}: ${json['strMeasure4']},\n${json['strIngredient5']}: ${json['strMeasure5']},\n${json['strIngredient6']}: ${json['strMeasure6']},\n${json['strIngredient7']}: ${json['strMeasure7']},\n${json['strIngredient8']}: ${json['strMeasure8']},\n${json['strIngredient9']}: ${json['strMeasure9']} ${json['strIngredient10']?.toString().isNotEmpty == true ? ",\n${json['strIngredient10']} : ${json['strMeasure10']}" : ''}',
+        instructions: json['strInstructions'],
+        name: json['strMeal'],
+        tags: json['strTags'],
+        thumbnail: json['strMealThumb'],
+        youtubeLink: json['strYoutube'],
+      );
+
+  static List<Recipe> fromDynamic(List list) => list
+      .map(
+        (item) => Recipe.fromJson(item),
+      )
+      .toList();
+
+  final String? area;
+  final String? category;
+  final String? id;
+  final String? ingredients;
+  final String? instructions;
+  final String? name;
+  final String? tags;
+  final String? thumbnail;
+  final String? youtubeLink;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'area': area,
+        'category': category,
+        'id': id,
+        'name': name,
+        'tags': tags,
+        'thumbnail': thumbnail,
+        'youtubeLink': youtubeLink,
+      };
 }

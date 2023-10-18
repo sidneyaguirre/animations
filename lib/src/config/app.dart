@@ -6,8 +6,6 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../widgets/recipe/model/recipe.dart';
-
 final routeNames = [
   '/',
   '/recipes',
@@ -43,12 +41,8 @@ final GoRouter _router = GoRouter(
           path: '/dash',
           pageBuilder: (BuildContext context, GoRouterState state) {
             return CustomTransitionPage(
-              child: Container(
-                color: Colors.transparent,
-                child: Center(
-                  child: Text('HELLO'),
-                ),
-              ),
+              child: MouseTrailDetectorPage(),
+              opaque: false,
               transitionsBuilder: (context, animation, _, child) {
                 return Scaffold(
                   backgroundColor: Colors.transparent,
@@ -86,6 +80,7 @@ final GoRouter _router = GoRouter(
           pageBuilder: (BuildContext context, GoRouterState state) {
             return CustomTransitionPage(
               child: PerfumePageContent(),
+              opaque: false,
               transitionsBuilder: (context, animation, _, child) {
                 return Scaffold(
                   backgroundColor: Colors.transparent,
