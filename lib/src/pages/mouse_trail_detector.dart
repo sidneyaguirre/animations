@@ -31,11 +31,9 @@ class MouseTrailDetectorPage extends StatelessWidget {
                   ),
                 ),
               ),
-              IgnorePointer(
-                child: Image.asset(
-                  'assets/dash.png',
-                  width: 300,
-                ),
+              Image.asset(
+                'assets/dash.png',
+                width: 300,
               ),
             ],
           ),
