@@ -13,10 +13,12 @@ class Wave extends StatefulWidget {
   State<Wave> createState() => _WaveState();
 }
 
-class _WaveState extends State<Wave> with SingleTickerProviderStateMixin {
+class _WaveState extends State<Wave> with TickerProviderStateMixin {
   late List<double> _points;
   late AnimationController _animationController;
+  late AnimationController _slideController;
   late final Animation<double> _curveAnimation;
+  late final Animation<Offset> _offsetAnimation;
 
   @override
   void initState() {
@@ -26,6 +28,21 @@ class _WaveState extends State<Wave> with SingleTickerProviderStateMixin {
       duration: const Duration(milliseconds: 800),
       vsync: this,
     )..forward();
+
+    _slideController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+
+    _offsetAnimation = Tween<Offset>(
+      begin: Offset(0.0, 1.0),
+      end: const Offset(0.0, 0.0),
+    ).animate(
+      CurvedAnimation(
+        parent: _slideController,
+        curve: Curves.linear,
+      ),
+    );
 
     _curveAnimation = Tween<double>(
       begin: 0.0,
@@ -41,6 +58,7 @@ class _WaveState extends State<Wave> with SingleTickerProviderStateMixin {
       }) //This listener will trigger the AnimatedCrossFade to rebuild showing the second Child
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
+          _slideController.forward();
           setState(() {});
         }
       });
@@ -82,9 +100,12 @@ class _WaveState extends State<Wave> with SingleTickerProviderStateMixin {
           ),
         ),
       ),
-      secondChild: Container(
-        color: Colors.transparent,
-        child: widget.child,
+      secondChild: SlideTransition(
+        position: _offsetAnimation,
+        child: Container(
+          color: Colors.transparent,
+          child: widget.child,
+        ),
       ),
     );
   }
