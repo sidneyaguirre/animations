@@ -14,17 +14,18 @@ class Wave extends StatefulWidget {
 }
 
 class _WaveState extends State<Wave> with TickerProviderStateMixin {
-  late List<double> _points;
-  late AnimationController _animationController;
-  late AnimationController _slideController;
   late final Animation<double> _curveAnimation;
   late final Animation<Offset> _offsetAnimation;
+
+  late AnimationController _curveController;
+  late List<double> _points;
+  late AnimationController _slideController;
 
   @override
   void initState() {
     super.initState();
 
-    _animationController = AnimationController(
+    _curveController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     )..forward();
@@ -49,13 +50,13 @@ class _WaveState extends State<Wave> with TickerProviderStateMixin {
       end: 10.0,
     ).animate(
       CurvedAnimation(
-        parent: _animationController,
+        parent: _curveController,
         curve: Curves.linear,
       ),
     )
       ..addListener(() {
         _initPoints();
-      }) //This listener will trigger the AnimatedCrossFade to rebuild showing the second Child
+      })
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           _slideController.forward();
@@ -68,7 +69,7 @@ class _WaveState extends State<Wave> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _curveController.dispose();
     super.dispose();
   }
 
@@ -86,38 +87,39 @@ class _WaveState extends State<Wave> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return AnimatedCrossFade(
-      crossFadeState: _curveAnimation.isCompleted
-          ? CrossFadeState.showSecond
-          : CrossFadeState.showFirst,
-      duration: const Duration(milliseconds: 100),
-      firstChild: Center(
-        child: CustomPaint(
-          size: Size(size.width, size.height),
-          painter: PathPainter(
-            value: _animationController.value,
-            wavePoints: _points,
-          ),
-        ),
-      ),
-      secondChild: SlideTransition(
-        position: _offsetAnimation,
-        child: Container(
-          color: Colors.transparent,
-          child: widget.child,
-        ),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        Widget result;
+        if (_curveAnimation.isCompleted) {
+          result = SlideTransition(
+            position: _offsetAnimation,
+            child: Container(
+              color: Colors.white,
+              child: widget.child,
+            ),
+          );
+        } else {
+          result = Center(
+            child: CustomPaint(
+              size: Size(size.width, size.height),
+              painter: PathPainter(
+                wavePoints: _points,
+              ),
+            ),
+          );
+        }
+
+        return result;
+      },
     );
   }
 }
 
 class PathPainter extends CustomPainter {
   PathPainter({
-    required this.value,
     required this.wavePoints,
   });
 
-  double value;
   List<double> wavePoints;
 
   @override
@@ -133,8 +135,8 @@ class PathPainter extends CustomPainter {
       Offset.zero,
       Offset(0.0, size.height),
       [
-        Colors.purple,
-        Colors.transparent,
+        Colors.purple.shade900,
+        Colors.white,
       ],
     );
 
