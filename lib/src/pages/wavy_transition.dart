@@ -1,6 +1,6 @@
 import 'dart:math';
+import 'dart:ui' as ui;
 
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
 class Wave extends StatefulWidget {
@@ -13,10 +13,10 @@ class Wave extends StatefulWidget {
   State<Wave> createState() => _WaveState();
 }
 
-class _WaveState extends State<Wave> with TickerProviderStateMixin {
-  late List<Offset> _points;
+class _WaveState extends State<Wave> with SingleTickerProviderStateMixin {
+  late List<double> _points;
   late AnimationController _animationController;
-  late final Animation<Offset> _offsetAnimation;
+  late final Animation<double> _curveAnimation;
 
   @override
   void initState() {
@@ -27,15 +27,18 @@ class _WaveState extends State<Wave> with TickerProviderStateMixin {
       vsync: this,
     )..forward();
 
-    _offsetAnimation = Tween<Offset>(
-      begin: Offset(0.0, 1.0),
-      end: const Offset(0.0, -1.0),
+    _curveAnimation = Tween<double>(
+      begin: 0.0,
+      end: 10.0,
     ).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: Curves.linear,
       ),
-    ) //This listener will trigger the AnimatedCrossFade to rebuild showing the perfume result
+    )
+      ..addListener(() {
+        _initPoints();
+      }) //This listener will trigger the AnimatedCrossFade to rebuild showing the second Child
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           setState(() {});
@@ -54,80 +57,95 @@ class _WaveState extends State<Wave> with TickerProviderStateMixin {
   void _initPoints() {
     _points = [];
     var r = Random();
-    for (var i = 0; i < widget.size.width; i++) {
-      var x = i.toDouble();
-      var y = r.nextDouble() * (widget.size.height);
+    for (var i = 0; i <= widget.size.height / 100; i++) {
+      var y = r.nextDouble();
 
-      _points.add(Offset(x, y));
+      _points.add(y + _curveAnimation.value);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return AnimatedCrossFade(
-      crossFadeState: _offsetAnimation.isCompleted
+      crossFadeState: _curveAnimation.isCompleted
           ? CrossFadeState.showSecond
           : CrossFadeState.showFirst,
       duration: const Duration(milliseconds: 100),
-      firstChild: SlideTransition(
-        position: _offsetAnimation,
-        child: ClipPath(
-          clipper: WaveClipper(_animationController.value, _points),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                colors: [
-                  AppTheme.violetPastel,
-                  AppTheme.violetPastel,
-                  Colors.transparent,
-                ],
-                end: Alignment.bottomCenter,
-                stops: [0.0, 0.65, 1.0],
-              ),
-            ),
+      firstChild: Center(
+        child: CustomPaint(
+          size: Size(size.width, size.height),
+          painter: PathPainter(
+            value: _animationController.value,
+            wavePoints: _points,
           ),
         ),
       ),
       secondChild: Container(
         color: Colors.transparent,
-        child: widget.child, //Perfume Results
+        child: widget.child,
       ),
     );
   }
 }
 
-class WaveClipper extends CustomClipper<Path> {
-  WaveClipper(this.value, this.wavePoints);
+class PathPainter extends CustomPainter {
+  PathPainter({
+    required this.value,
+    required this.wavePoints,
+  });
 
   double value;
-  List<Offset> wavePoints;
+  List<double> wavePoints;
 
   @override
-  Path getClip(Size size) {
-    var path = Path();
-    _makeCurve(size);
-    path.addPolygon(wavePoints, false);
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4.0;
+    // paint the gradient fill
+    var fillPath = _makeCurve(size);
+    paint.style = PaintingStyle.fill;
+    paint.shader = ui.Gradient.linear(
+      Offset.zero,
+      Offset(0.0, size.height),
+      [
+        Colors.purple,
+        Colors.transparent,
+      ],
+    );
 
-    path.lineTo(size.width, size.height);
-    path.lineTo(0.0, size.height);
-    path.close();
-
-    return path;
+    canvas.drawPath(fillPath, paint);
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => true;
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 
-  void _makeCurve(Size size) {
-    final amplitude = size.height / 15;
-    final yOffset = amplitude;
+  Path _makeCurve(Size size) {
+    final width = size.width;
+    final height = size.height;
 
-    for (var x = 0; x < size.width; x++) {
-      var y = (amplitude) * sin(x / 100 - value) + yOffset;
+    final path = Path();
+    final segmentWidth = width / (wavePoints.length * 3); // curved line
 
-      var newPoint = Offset(x.toDouble(), y);
-      wavePoints[x] = newPoint;
+    for (var i = 1; i < wavePoints.length; i++) {
+      path.cubicTo(
+        (3 * i + 1) * segmentWidth,
+        height - wavePoints[i - 1] * height,
+        (3 * i + 2) * segmentWidth,
+        height - wavePoints[i] * height,
+        (3 * i + 3) * segmentWidth,
+        height - wavePoints[i] * height,
+      );
     }
+    path.lineTo(width, height - wavePoints[wavePoints.length - 1] * height);
+    // for the gradient fill, we want to close the path
+
+    path.lineTo(width, height);
+    path.lineTo(0, height);
+
+    return path;
   }
 }

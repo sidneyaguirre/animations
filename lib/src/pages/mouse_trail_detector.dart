@@ -17,7 +17,7 @@ class MouseTrailDetectorPage extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(40.0)),
-                  color: Colors.purple.shade200,
+                  color: Colors.purple.shade500,
                 ),
                 height: 200,
                 padding: const EdgeInsets.all(30.0),
