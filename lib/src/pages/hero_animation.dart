@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:animations/src/pages/search_bar.dart';
+import 'package:animations/src/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;

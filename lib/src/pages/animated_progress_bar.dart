@@ -161,12 +161,9 @@ class _FormQuestionState extends State<FormQuestion> {
             child: Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                border: selected
-                    ? Border.all(color: Colors.deepPurple.shade900, width: 2)
-                    : null,
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                 color: selected
-                    ? Colors.deepPurple.shade400
+                    ? Colors.deepPurple.shade900
                     : Colors.deepPurple.shade100,
               ),
               height: 50,

@@ -71,7 +71,7 @@ class _PerfumePageContentState extends State<PerfumePageContent> {
                 child: ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      _size = _large ? 200 : 400;
+                      _size = _large ? 300 : 400;
                       _large = !_large;
                     });
                   },

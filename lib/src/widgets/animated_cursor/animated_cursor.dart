@@ -14,7 +14,7 @@ class AnimatedCursorTrailState {
     borderRadius: BorderRadius.all(
       Radius.circular(90),
     ),
-    color: Colors.purple,
+    color: Colors.purpleAccent,
   );
 
   final BoxDecoration decoration;
@@ -73,7 +73,7 @@ class AnimatedCursorTrail extends StatelessWidget {
     final result = <Widget>[];
 
     for (var index = 0; index < provider.listTrail.length; index++) {
-      if (index % 30 == 0) {
+      if (index % 5 == 0) {
         result.add(provider.listTrail.elementAt(index));
       }
     }

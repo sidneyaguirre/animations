@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
 class Wave extends StatefulWidget {
@@ -78,17 +77,18 @@ class _WaveState extends State<Wave> with TickerProviderStateMixin {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 colors: [
-                  AppTheme.violetPastel,
-                  AppTheme.violetPastel,
+                  Colors.purple.shade900,
+                  Colors.purple.shade900,
                   Colors.transparent,
                 ],
                 end: Alignment.bottomCenter,
-                stops: [0.0, 0.65, 1.0],
+                stops: [0.0, 0.75, 1.0],
               ),
             ),
           ),
         ),
       ),
+      //change to enter as slide too
       secondChild: Container(
         color: Colors.transparent,
         child: widget.child, //Perfume Results
