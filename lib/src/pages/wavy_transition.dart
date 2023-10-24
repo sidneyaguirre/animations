@@ -76,13 +76,11 @@ class _WaveState extends State<Wave> with TickerProviderStateMixin {
   void _initPoints() {
     _points = [];
     var r = Random();
-    for (var i = 0; i <= widget.size.height / 100; i++) {
+    for (var i = 0; i <= 3; i++) {
       var y = r.nextDouble();
 
       _points.add(y + _curveAnimation.value);
     }
-    
-    print(_points);
   }
 
   @override
