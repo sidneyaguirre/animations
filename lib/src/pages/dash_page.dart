@@ -1,8 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
-class MouseTrailDetectorPage extends StatelessWidget {
-  const MouseTrailDetectorPage({super.key});
+class DashPage extends StatelessWidget {
+  const DashPage({super.key});
 
   @override
   Widget build(BuildContext context) {

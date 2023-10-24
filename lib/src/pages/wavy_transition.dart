@@ -81,6 +81,8 @@ class _WaveState extends State<Wave> with TickerProviderStateMixin {
 
       _points.add(y + _curveAnimation.value);
     }
+    
+    print(_points);
   }
 
   @override

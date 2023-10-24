@@ -41,7 +41,7 @@ final GoRouter _router = GoRouter(
           path: '/dash',
           pageBuilder: (BuildContext context, GoRouterState state) {
             return CustomTransitionPage(
-              child: MouseTrailDetectorPage(),
+              child: DashPage(),
               opaque: false,
               transitionsBuilder: (context, animation, _, child) {
                 return Scaffold(
