@@ -8,7 +8,7 @@ class DashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedCursorTrail(
       child: Container(
-        color: Colors.white,
+        color: Colors.transparent,
         child: Center(
           child: Stack(
             alignment: Alignment.centerRight,

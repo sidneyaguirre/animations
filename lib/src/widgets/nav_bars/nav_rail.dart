@@ -4,14 +4,12 @@ import 'package:flutter/material.dart';
 class CustomNavigationRail extends StatelessWidget {
   const CustomNavigationRail({
     super.key,
-    required this.backgroundColor,
     this.onDestinationSelected,
     required this.railAnimation,
     required this.railFabAnimation,
     required this.selectedIndex,
   });
 
-  final Color backgroundColor;
   final ValueChanged<int>? onDestinationSelected;
   final RailAnimation railAnimation;
   final RailFabAnimation railFabAnimation;
@@ -19,19 +17,31 @@ class CustomNavigationRail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = Colors.black87;
+
     return NavRailTransition(
       animation: railAnimation,
-      backgroundColor: backgroundColor,
+      backgroundColor: Colors.deepPurple.shade100,
       child: NavigationRail(
         extended: true,
         selectedIndex: selectedIndex,
-        backgroundColor: backgroundColor,
+        backgroundColor: Colors.deepPurple.shade100,
         onDestinationSelected: onDestinationSelected,
         groupAlignment: -0.85,
         destinations: destinations.map((d) {
           return NavigationRailDestination(
-            icon: Icon(d.icon),
-            label: Text(d.label),
+            icon: Icon(
+              d.icon,
+              color: color,
+            ),
+            label: Text(
+              d.label,
+              style: TextStyle(
+                color: color,
+                fontSize: 12.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           );
         }).toList(),
       ),

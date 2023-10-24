@@ -19,7 +19,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   late final _colorScheme = Theme.of(context).colorScheme;
   late final _backgroundColor = Color.alphaBlend(
-    _colorScheme.primary.withOpacity(0.14),
+    _colorScheme.primary.withOpacity(0.15),
     _colorScheme.surface,
   );
   late final _controller = AnimationController(
@@ -92,7 +92,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           body: Row(
             children: [
               CustomNavigationRail(
-                backgroundColor: _backgroundColor,
                 selectedIndex: _selectedIndex,
                 onDestinationSelected: (index) {
                   setState(() {

@@ -13,31 +13,50 @@ class Wave extends StatefulWidget {
 }
 
 class _WaveState extends State<Wave> with TickerProviderStateMixin {
+  late final Animation<Offset> _pageTransitionAnimation;
+  late final Animation<Offset> _pageContentAnimation;
+
   late List<Offset> _points;
-  late AnimationController _animationController;
-  late final Animation<Offset> _offsetAnimation;
+  late AnimationController _contentController;
+  late AnimationController _waveController;
 
   @override
   void initState() {
     super.initState();
 
-    _animationController = AnimationController(
+    _contentController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+
+    _waveController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     )..forward();
 
-    _offsetAnimation = Tween<Offset>(
+    _pageContentAnimation = Tween<Offset>(
+      begin: Offset(0.0, 1.0),
+      end: const Offset(0.0, 0.0),
+    ).animate(
+      CurvedAnimation(
+        parent: _contentController,
+        curve: Curves.linear,
+      ),
+    );
+
+    _pageTransitionAnimation = Tween<Offset>(
       begin: Offset(0.0, 1.0),
       end: const Offset(0.0, -1.0),
     ).animate(
       CurvedAnimation(
-        parent: _animationController,
+        parent: _waveController,
         curve: Curves.linear,
       ),
     ) //This listener will trigger the AnimatedCrossFade to rebuild showing the perfume result
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           setState(() {});
+          _contentController.forward();
         }
       });
 
@@ -46,7 +65,7 @@ class _WaveState extends State<Wave> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _waveController.dispose();
     super.dispose();
   }
 
@@ -63,36 +82,42 @@ class _WaveState extends State<Wave> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedCrossFade(
-      crossFadeState: _offsetAnimation.isCompleted
-          ? CrossFadeState.showSecond
-          : CrossFadeState.showFirst,
-      duration: const Duration(milliseconds: 100),
-      firstChild: SlideTransition(
-        position: _offsetAnimation,
-        child: ClipPath(
-          clipper: WaveClipper(_animationController.value, _points),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                colors: [
-                  Colors.purple.shade900,
-                  Colors.purple.shade900,
-                  Colors.transparent,
-                ],
-                end: Alignment.bottomCenter,
-                stops: [0.0, 0.75, 1.0],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        Widget result;
+        if (_pageTransitionAnimation.isCompleted) {
+          result = SlideTransition(
+            position: _pageContentAnimation,
+            child: Container(
+              color: Colors.transparent,
+              child: widget.child,
+            ),
+          );
+        } else {
+          result = SlideTransition(
+            position: _pageTransitionAnimation,
+            child: ClipPath(
+              clipper: WaveClipper(_waveController.value, _points),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    colors: [
+                      Colors.purple.shade900,
+                      Colors.purple.shade900,
+                      Colors.transparent,
+                    ],
+                    end: Alignment.bottomCenter,
+                    stops: [0.0, 0.75, 1.0],
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
-      //change to enter as slide too
-      secondChild: Container(
-        color: Colors.transparent,
-        child: widget.child, //Perfume Results
-      ),
+          );
+        }
+
+        return result;
+      },
     );
   }
 }

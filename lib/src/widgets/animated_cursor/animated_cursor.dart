@@ -14,7 +14,7 @@ class AnimatedCursorTrailState {
     borderRadius: BorderRadius.all(
       Radius.circular(90),
     ),
-    color: Colors.purpleAccent,
+    color: Colors.purple,
   );
 
   final BoxDecoration decoration;
