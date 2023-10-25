@@ -23,7 +23,7 @@ class DashPage extends StatelessWidget {
                 padding: const EdgeInsets.all(30.0),
                 width: MediaQuery.sizeOf(context).width * 0.5,
                 child: Text(
-                  'Hello Flutter Conf LATAM!',
+                  'Flutter Conf LATAM!',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 30.0,

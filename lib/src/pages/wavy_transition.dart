@@ -52,7 +52,7 @@ class _WaveState extends State<Wave> with TickerProviderStateMixin {
         parent: _waveController,
         curve: Curves.linear,
       ),
-    ) //This listener will trigger the AnimatedCrossFade to rebuild showing the perfume result
+    ) //This listener will trigger the second animation
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           setState(() {});
@@ -65,6 +65,7 @@ class _WaveState extends State<Wave> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    _contentController.dispose();
     _waveController.dispose();
     super.dispose();
   }
