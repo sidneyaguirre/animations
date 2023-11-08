@@ -4,20 +4,12 @@ import 'package:provider/provider.dart';
 
 class AnimatedCursorTrailState {
   const AnimatedCursorTrailState({
-    this.decoration = defaultDecoration,
     this.offset = Offset.zero,
     this.size = defaultSize,
   });
 
   static const Size defaultSize = Size(20, 20);
-  static const BoxDecoration defaultDecoration = BoxDecoration(
-    borderRadius: BorderRadius.all(
-      Radius.circular(90),
-    ),
-    color: Colors.purple,
-  );
 
-  final BoxDecoration decoration;
   final Offset offset;
   final Size size;
 }
@@ -34,7 +26,6 @@ class AnimatedCursorTrailProvider extends ChangeNotifier {
     if (renderBox == null) return;
 
     state = AnimatedCursorTrailState(
-      decoration: decoration ?? AnimatedCursorTrailState.defaultDecoration,
       offset: renderBox.localToGlobal(Offset.zero).translate(
             renderBox.size.width / 2,
             renderBox.size.height / 2,
@@ -167,10 +158,10 @@ class AnimatedTrail extends StatefulWidget {
 }
 
 class _AnimatedTrailState extends State<AnimatedTrail> {
-  double opacityLevel = 1.0;
+  double scaleValue = 1.0;
 
   void changeOpacity() {
-    if (mounted) setState(() => opacityLevel = 0.0);
+    if (mounted) setState(() => scaleValue = 0.0);
   }
 
   @override
@@ -180,17 +171,17 @@ class _AnimatedTrailState extends State<AnimatedTrail> {
     });
 
     return Positioned(
-      left: widget.offset.dx - navBarWidth,
+      left: widget.offset.dx,
       top: widget.offset.dy,
       child: IgnorePointer(
-        child: AnimatedOpacity(
-          duration: Duration(seconds: 3),
+        child: AnimatedScale(
+          duration: const Duration(seconds: 2),
           curve: Curves.ease,
-          opacity: opacityLevel,
-          child: Icon(
+          scale: scaleValue,
+          child: const Icon(
             Icons.favorite,
-            color: AnimatedCursorTrailState.defaultDecoration.color,
-            size: AnimatedCursorTrailState.defaultSize.height,
+            color: MyTheme.burgundyColor,
+            size: 20.0,
           ),
         ),
       ),
