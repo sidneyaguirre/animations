@@ -46,6 +46,7 @@ class _PerfumeFormState extends State<PerfumeForm> {
   final _responses = <String>[];
 
   double _formProgress = 0.0;
+  double _opacity = 1.0;
   int _questionIndex = 0;
   String? _response;
 
@@ -54,7 +55,7 @@ class _PerfumeFormState extends State<PerfumeForm> {
     _formProgress += 1 / _questions.length;
 
     setState(() {});
-    Future.delayed(Duration(seconds: 1), () => context.go('/perfume'));
+    Future.delayed(const Duration(seconds: 1), () => context.go('/perfume'));
   }
 
   void _onSelectResponse(String value) {
@@ -62,12 +63,17 @@ class _PerfumeFormState extends State<PerfumeForm> {
     setState(() {});
   }
 
-  void _updateFormProgress() {
+  Future<void> _updateFormProgress() async {
+    _opacity = 0.0;
     _responses.add(_response!);
     _response = null;
     _questionIndex += 1;
     _formProgress += 1 / _questions.length;
+    setState(() {});
+    
+    await Future.delayed(const Duration(milliseconds: 300));
 
+    _opacity = 1.0;
     setState(() {});
   }
 
@@ -88,6 +94,7 @@ class _PerfumeFormState extends State<PerfumeForm> {
                 onSelectedOption: (String value) {
                   _onSelectResponse.call(value);
                 },
+                opacity: _opacity,
                 options: question.values.first,
                 question: question.keys.first,
               ),
@@ -122,11 +129,13 @@ class FormQuestion extends StatefulWidget {
   const FormQuestion({
     super.key,
     required this.onSelectedOption,
+    required this.opacity,
     required this.options,
     required this.question,
   });
 
   final Function(String) onSelectedOption;
+  final double opacity;
   final List<String> options;
   final String question;
 
@@ -186,20 +195,24 @@ class _FormQuestionState extends State<FormQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          widget.question,
-          maxLines: 2,
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 20.0),
-        ..._buildOptionCards(),
-      ],
+    return AnimatedOpacity(
+      opacity: widget.opacity,
+      duration: const Duration(milliseconds: 200),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            widget.question,
+            maxLines: 2,
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20.0),
+          ..._buildOptionCards(),
+        ],
+      ),
     );
   }
 }
@@ -274,7 +287,7 @@ class _AnimatedProgressIndicatorState extends State<AnimatedProgressIndicator>
       builder: (context, child) => Padding(
         padding: const EdgeInsets.all(50.0),
         child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
           child: LinearProgressIndicator(
             backgroundColor: _colorAnimation.value?.withOpacity(0.3),
             minHeight: 10.0,

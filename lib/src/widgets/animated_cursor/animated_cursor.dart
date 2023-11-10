@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +16,7 @@ class AnimatedCursorTrailState {
 class AnimatedCursorTrailProvider extends ChangeNotifier {
   AnimatedCursorTrailProvider();
 
-  AnimatedCursorTrailState state = AnimatedCursorTrailState();
+  AnimatedCursorTrailState state = const AnimatedCursorTrailState();
   final listTrail = <Widget>[];
 
   void changeCursor(GlobalKey key, {BoxDecoration? decoration}) {
@@ -37,7 +36,7 @@ class AnimatedCursorTrailProvider extends ChangeNotifier {
   }
 
   void resetCursor() {
-    state = AnimatedCursorTrailState();
+    state = const AnimatedCursorTrailState();
     notifyListeners();
   }
 
@@ -180,7 +179,7 @@ class _AnimatedTrailState extends State<AnimatedTrail> {
           scale: scaleValue,
           child: const Icon(
             Icons.favorite,
-            color: MyTheme.burgundyColor,
+            color: Colors.purple,
             size: 20.0,
           ),
         ),

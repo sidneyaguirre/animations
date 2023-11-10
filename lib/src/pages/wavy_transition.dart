@@ -35,8 +35,8 @@ class _WaveState extends State<Wave> with TickerProviderStateMixin {
     )..forward();
 
     _pageContentAnimation = Tween<Offset>(
-      begin: Offset(0.0, 1.0),
-      end: const Offset(0.0, 0.0),
+      begin: const Offset(0.0, 1.0),
+      end: Offset.zero,
     ).animate(
       CurvedAnimation(
         parent: _contentController,
@@ -45,7 +45,7 @@ class _WaveState extends State<Wave> with TickerProviderStateMixin {
     );
 
     _pageTransitionAnimation = Tween<Offset>(
-      begin: Offset(0.0, 1.0),
+      begin: const Offset(0.0, 1.0),
       end: const Offset(0.0, -1.0),
     ).animate(
       CurvedAnimation(
@@ -89,7 +89,7 @@ class _WaveState extends State<Wave> with TickerProviderStateMixin {
         if (_pageTransitionAnimation.isCompleted) {
           result = SlideTransition(
             position: _pageContentAnimation,
-            child: Container(
+            child: ColoredBox(
               color: Colors.transparent,
               child: widget.child,
             ),
@@ -109,7 +109,7 @@ class _WaveState extends State<Wave> with TickerProviderStateMixin {
                       Colors.transparent,
                     ],
                     end: Alignment.bottomCenter,
-                    stops: [0.0, 0.75, 1.0],
+                    stops: const [0.0, 0.75, 1.0],
                   ),
                 ),
               ),

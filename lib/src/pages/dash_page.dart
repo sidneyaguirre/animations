@@ -7,7 +7,7 @@ class DashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedCursorTrail(
-      child: Container(
+      child: ColoredBox(
         color: Colors.transparent,
         child: Center(
           child: Stack(
@@ -16,13 +16,13 @@ class DashPage extends StatelessWidget {
               Container(
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(40.0)),
+                  borderRadius: const BorderRadius.all(Radius.circular(40.0)),
                   color: Colors.purple.shade900,
                 ),
                 height: 200,
                 padding: const EdgeInsets.all(30.0),
                 width: MediaQuery.sizeOf(context).width * 0.5,
-                child: Text(
+                child: const Text(
                   'Flutter Conf LATAM!',
                   style: TextStyle(
                     color: Colors.white,

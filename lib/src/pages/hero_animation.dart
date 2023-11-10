@@ -53,7 +53,7 @@ class _RecipeListPageState extends State<RecipeListPage>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple.shade50,
-        title: MySearchBar(),
+        title: const MySearchBar(),
         toolbarHeight: 80,
       ),
       backgroundColor: Colors.deepPurple.shade50,
@@ -65,7 +65,7 @@ class _RecipeListPageState extends State<RecipeListPage>
                 },
                 itemCount: _recipes.length,
               )
-            : CircularProgressIndicator(),
+            : const CircularProgressIndicator(),
       ),
     );
   }
@@ -108,7 +108,7 @@ class RecipeItem extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: padding),
+              const SizedBox(width: padding),
               Expanded(
                 flex: 3,
                 child: Padding(
@@ -118,15 +118,15 @@ class RecipeItem extends StatelessWidget {
                     children: [
                       Text(
                         recipe.name!,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: titleSize,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: padding),
+                      const SizedBox(height: padding),
                       Text(
                         recipe.category ?? '',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: bodySize,
                           fontWeight: FontWeight.w700,
                         ),
@@ -186,11 +186,11 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
           onPressed: () {
             context.pop();
           },
-          icon: Icon(Icons.arrow_back_rounded),
+          icon: const Icon(Icons.arrow_back_rounded),
         ),
         title: Text(
           _recipe.name!,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: _titleSize,
             fontWeight: FontWeight.bold,
           ),
@@ -232,9 +232,9 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: _padding),
+                  const SizedBox(height: _padding),
                   if (_recipe.tags != null)
-                    Text(
+                    const Text(
                       'Tags:',
                       style: TextStyle(
                         fontSize: 16,
@@ -245,23 +245,23 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                   if (_recipe.tags != null)
                     Text(
                       _recipe.tags!,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: _bodySize,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  SizedBox(height: _padding),
+                  const SizedBox(height: _padding),
                   ExpansionTile(
                     backgroundColor: Colors.purple.shade100,
                     collapsedBackgroundColor: Colors.purple.shade100,
-                    collapsedShape: RoundedRectangleBorder(
+                    collapsedShape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(12.0),
                       ),
                     ),
                     controlAffinity: ListTileControlAffinity.leading,
                     expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                    shape: RoundedRectangleBorder(
+                    shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(12.0),
                       ),
@@ -270,7 +270,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                       _expandedIngredients
                           ? 'Hide Ingredients'
                           : 'See Ingredients',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: _bodySize,
                         fontWeight: FontWeight.bold,
                       ),
@@ -293,7 +293,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                         padding: const EdgeInsets.all(10.0),
                         child: Text(
                           _recipe.ingredients ?? '',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: _bodySize,
                             fontWeight: FontWeight.normal,
                           ),
@@ -301,32 +301,32 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: _padding),
-                  Text(
+                  const SizedBox(height: _padding),
+                  const Text(
                     'Instructions:',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     _recipe.instructions ?? '',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: _bodySize,
                       fontWeight: FontWeight.normal,
                     ),
                   ),
-                  SizedBox(height: _padding),
+                  const SizedBox(height: _padding),
                   Text(
                     _recipe.youtubeLink ?? '',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.deepPurpleAccent,
                       fontSize: _bodySize,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: _padding),
+                  const SizedBox(height: _padding),
                 ],
               ),
             ),
