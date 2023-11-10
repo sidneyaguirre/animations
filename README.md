@@ -12,3 +12,5 @@ In this project you will find several implementations of Implicit and Explicit a
 - Page Transition animation
 - Content Slide animation
 - A cursor trail animation
+
+[slides presentation](https://www.canva.com/design/DAFwJ6eAotw/kBsFZbxRxPeDdcjNitMhNQ/view?utm_content=DAFwJ6eAotw&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink)
